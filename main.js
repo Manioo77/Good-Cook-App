@@ -8,7 +8,7 @@ const urlApi = 'https://www.themealdb.com/api/json/v1/1/search.php?s='
 const searchRecipe = () => {
 	const currentInput = inputSearch.value.trim()
 	if (!currentInput) {
-		recipes.innerHTML = `<h3>Input Field cannot be Empty</h3>`
+		recipes.innerHTML = '<h3 class="error">Input Field cannot be Empty</h3>'
 		return
 	}
 
@@ -18,38 +18,38 @@ const searchRecipe = () => {
 			const meal = data.meals[0]
 
 			if (!meal) {
-				recipes.innerHTML = `
-                <h3>We don't have such recipe, please try again!</h3>
-                `
+				recipes.innerHTML = "<h3 class='error'>We don't have such recipe, please try again!</h3>"
 				return
 			}
 
 			const ingredients = getIngredients(meal)
 
 			const recipeHtml = `
-                <div class="nameRecipe">
+			<div class="mainBox">
+                <div class="mainBox__nameRecipe">
                     <h2>${meal.strMeal}</h2>
                     <h4>${meal.strArea}</h4>
                 </div>
-                <img src=${meal.strMealThumb} alt=${meal.strMeal}/>
-                <div class="containerIngredients">
-                    <h3>Ingriedients:</h3>
-                    <ul>${ingredients}</ul>
+                <img class="mainBox__imgRecipe" src=${meal.strMealThumb} alt=${meal.strMeal}/>
+                <div class="mainBox__ingredients">
+                    <h3 class="mainBox__ingredients--h3">Ingriedients:</h3>
+                    <ul class="mainBox__ingredients--ul">${ingredients}</ul>
                 </div>
-                <div id="recipe">
-                    <button id="hide-recipe">X</button>
-                    <pre id="instructions">
+                <div class="mainBox__recipe">
+                    <button class="mainBox__recipe--btnHide">X</button>
+                    <pre class="mainBox__recipe--instructions">
                         ${meal.strInstructions}
                     </pre>
                 </div>
-                <button id="show-recipe">View Recipe</button>
+				<button class="mainBox__btnShow">View Recipe</button>
+			</div>
             `
 
 			recipes.innerHTML = recipeHtml
 
-			const hideRecipeBtn = document.getElementById('hide-recipe')
+			const hideRecipeBtn = document.querySelector('.mainBox__recipe--btnHide')
 			hideRecipeBtn.addEventListener('click', hideRecipe)
-			const showRecipeBtn = document.getElementById('show-recipe')
+			const showRecipeBtn = document.querySelector('.mainBox__btnShow')
 			showRecipeBtn.addEventListener('click', showRecipe)
 
 			containerSearch.style.opacity = '0'
@@ -58,7 +58,7 @@ const searchRecipe = () => {
 		.catch(() => {
 			containerSearch.style.opacity = '1'
 			containerSearch.style.dispay = 'flex'
-			recipes.innerHTML = `<h3>Error fetching data!</h3>`
+			recipes.innerHTML = `<h3 class="error">Error fetching data!</h3>`
 		})
 }
 
@@ -77,19 +77,18 @@ const getIngredients = meal => {
 }
 
 const hideRecipe = () => {
-	const recipe = document.getElementById('recipe')
+	const recipe = document.querySelector('.mainBox__recipe')
 	recipe.style.display = 'none'
 }
 
 const showRecipe = () => {
-	const recipe = document.getElementById('recipe')
+	const recipe = document.querySelector('.mainBox__recipe')
 	recipe.style.display = 'block'
 }
 
 btnSearch.addEventListener('click', searchRecipe)
 inputSearch.addEventListener('keydown', e => {
 	if (e.keyCode === 13) {
-		e.preventDefault()
 		searchRecipe()
 	}
 })
